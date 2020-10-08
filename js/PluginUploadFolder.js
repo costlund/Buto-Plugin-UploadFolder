@@ -77,8 +77,6 @@ function PluginUploadFolder(){
       if(json.success == true){
         if(PluginUploadFolder.data.success){
           eval(PluginUploadFolder.data.success)
-          //alert(PluginUploadFolder.file.name);
-          //PluginUploadFolder.rename(PluginUploadFolder.file.name);
         }else{
           alert('File was uploaded (set your custom success param to replace this alert)!');
         }
@@ -123,15 +121,11 @@ function PluginUploadFolder(){
       href += '?file='+file;
     }
     href += '&action=view';
-    window.open(href);
+    window.open(href, '_blank');
     return null;
   }
   this.rename = function(file){
     PluginUploadFolder.data.rename_file = file;
-
-//    alert(PluginUploadFolder.data.file);
-//    return null;
-    
     PluginWfBootstrapjs.modal({id: 'modal_puf_rename', content: '', label: PluginI18nJson_v1.i18n('Rename'), fadezzz: false});
     var data = [
       {type: 'div', innerHTML: 
@@ -146,24 +140,11 @@ function PluginUploadFolder(){
       }
     ];
     PluginWfDom.render(data, 'modal_puf_rename_body');
-    
-    
-    //$('#file').focus().select();
-    //document.getElementById("file").focus();
-    //document.getElementById("file").select();
-    
     return null;
   }
   this.rename_do = function(){
-    
-    //alert(PluginUploadFolder.data.rename_file);
-//    return null;
-//    
-//    alert($('#modal_puf_rename #file').val());
     $.get( PluginUploadFolder.data.url, { file: PluginUploadFolder.data.rename_file, new_file: $('#modal_puf_rename #file').val(), action: 'rename' } )
       .done(function( data ) {
-        
-        
         var json = JSON.parse(data);
         if(json.success == false){
           alert(json.error);
@@ -175,10 +156,7 @@ function PluginUploadFolder(){
             alert('File was renamed (set your custom success param to replace this alert)!');
           }
         }
-        
-        
       });    
-    
   }
 }
 var PluginUploadFolder = new PluginUploadFolder();

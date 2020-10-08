@@ -5,6 +5,7 @@ class PluginUploadFolder{
     wfPlugin::includeonce('string/match');
     wfPlugin::enable('wf/embed');
     wfPlugin::includeonce('download/safe');
+    wfPlugin::enable('wf/table');
     /**
      * Secure request param file.
      */
@@ -16,6 +17,15 @@ class PluginUploadFolder{
       throw new Exception(__CLASS__.' says: Error in request param new_file '.wfRequest::get('new_file').'!');
       exit;
     }
+  }
+  private function set_root_dir($data){
+    $root_dir = null;
+    if($data->get('data/public')){
+      $root_dir = wfGlobals::getWebDir();
+    }else{
+      $root_dir = wfGlobals::getAppDir();
+    }
+    return $root_dir;
   }
   private function set_data($data){
     $data = new PluginWfArray($data);
@@ -33,7 +43,7 @@ class PluginUploadFolder{
       }
     }
     if(!$valid){
-      exit('Role issue!');
+      throw new Exception(__CLASS__.' says: Role issue!');
     }
     /**
      * Replace dir
@@ -49,32 +59,47 @@ class PluginUploadFolder{
       }
     }
     /**
+     * 
+     */
+    $root_dir = $this->set_root_dir($data);
+    /**
      * Path exist
      */
-    $data->set('data/path_exist', wfFilesystem::fileExist(wfGlobals::getAppDir().$data->get('data/path')));
+    $data->set('data/path_exist', wfFilesystem::fileExist($root_dir.$data->get('data/path')));
     /**
      * Files
      */
-    $files = wfFilesystem::getScandir(wfGlobals::getAppDir().$data->get('data/path'));
+    $files = wfFilesystem::getScandir($root_dir.$data->get('data/path'));
     $files2 = array();
     foreach ($files as $key => $value) {
-      $type = mime_content_type(wfGlobals::getAppDir().$data->get('data/path').'/'.$value);
+      $type = mime_content_type($root_dir.$data->get('data/path').'/'.$value);
       $button_group = new PluginWfYml(__DIR__.'/widget/button_group.yml');
       $button_group->setByTag(array('value' => $value));
-      if(filetype(wfGlobals::getAppDir().$data->get('data/path').'/'.$value)!='file'){
+      /**
+       * 
+       */
+      if(filetype($root_dir.$data->get('data/path').'/'.$value)!='file'){
         continue;
       }
-      if($type=='image/jpeg'){
+      /**
+       * 
+       */
+      if(($type=='image/jpeg' || $type=='image/png' || $type=='application/pdf') && $data->get('data/public')){
+        $name = '<a href="'.$data->get('data/path').'/'.$value.'" target="_blank">'.$value.'</a>';
+      }elseif($type=='image/jpeg' || $type=='image/png' || $type=='application/pdf'){
         $name = '<a href=# onclick="PluginUploadFolder.view(\''.$value.'\')">'.$value.'</a>';
-        $button_group->setByTag(array('view_disabled' => ''));
       }else{
         $name = '<a href=# onclick="PluginUploadFolder.download(\''.$value.'\')">'.$value.'</a>';
+      }
+      if(($type=='image/jpeg' || $type=='image/png')){
+        $button_group->setByTag(array('view_disabled' => ''));
+      }else{
         $button_group->setByTag(array('view_disabled' => 'disabled'));
       }
       $files2[$value] = array(
           'name' => $name,
-          'size' => round(filesize(wfGlobals::getAppDir().$data->get('data/path').'/'.$value) / 1000, 2).' kb', 
-          'created_at' => date('Y-m-d H:i:s', filemtime(wfGlobals::getAppDir().$data->get('data/path').'/'.$value)), 
+          'size' => round(filesize($root_dir.$data->get('data/path').'/'.$value) / 1000, 2).' kb', 
+          'created_at' => date('Y-m-d H:i:s', filemtime($root_dir.$data->get('data/path').'/'.$value)), 
           'type' => $type,
           'action' => array(array('type' => 'span', 'innerHTML' => $button_group->get()))
           );
@@ -107,8 +132,6 @@ class PluginUploadFolder{
      * Size
      */
     $data->set('data/max_size_text', $data->get('data/max_size').' MB');
-    
-    
     return $data;
   }
   public static function runCaptureMethod($plugin, $method, $form){
@@ -122,14 +145,14 @@ class PluginUploadFolder{
     wfDocument::renderElement($element);
   }
   public function widget_folder($data){
-    
-    //wfHelp::yml_dump(wfUser::getSession()->get('plugin/upload/folder/file'));
-    
-    
+    /**
+     * 
+     */
     $data = $this->set_data($data);
-    
+    /**
+     * 
+     */
     $script = 'PluginUploadFolder.data = '.json_encode($data->get('data')).';';
-    
     /**
      * Rename last upload
      */
@@ -137,7 +160,6 @@ class PluginUploadFolder{
       wfUser::setSession('plugin/upload/folder/file/rename', true);
       $script .= "PluginUploadFolder.rename('".wfUser::getSession()->get('plugin/upload/folder/file/name')."');";
     }
-    
     /**
      * 
      */
@@ -145,15 +167,18 @@ class PluginUploadFolder{
     $widget->setByTag($data->get('data'));
     $widget->setByTag(array('data' => $script), 'script');
     wfDocument::renderElement($widget->get());
-    //wfHelp::textarea_dump($data->get('data'));
   }
   public function widget_capture($data){
     $data = $this->set_data($data);
     /**
      * 
      */
+    $root_dir = $this->set_root_dir($data);
+    /**
+     * 
+     */
     if(!$data->get('data/path_exist')){
-      mkdir(wfGlobals::getAppDir().$data->get('data/path'), 0777, true);
+      mkdir($root_dir.$data->get('data/path'), 0777, true);
     }
     /**
      * 
@@ -164,7 +189,7 @@ class PluginUploadFolder{
     /**
      * 
      */
-    if(!wfFilesystem::fileExist(wfGlobals::getAppDir().$json->get('data/path'))){
+    if(!wfFilesystem::fileExist($root_dir.$json->get('data/path'))){
       throw new Exception(__CLASS__." says: Dir ".$json->get('data/path')." does not exist!");
     }
     /**
@@ -218,7 +243,7 @@ class PluginUploadFolder{
        * Save
        */
       if($json->get('success')){
-        $move = move_uploaded_file($json->get('file/tmp_name'), wfGlobals::getAppDir().$json->get('data/path').'/'.$json->get('file/name'));
+        $move = move_uploaded_file($json->get('file/tmp_name'), $root_dir.$json->get('data/path').'/'.$json->get('file/name'));
         wfUser::setSession('plugin/upload/folder/file', $json->get('file'));
         $json->set('move', $move);
       }
@@ -227,21 +252,27 @@ class PluginUploadFolder{
         /**
          * Delete
          */
-        if(wfFilesystem::fileExist(wfGlobals::getAppDir().$json->get('data/path').'/'.wfRequest::get('file'))){
-          wfFilesystem::delete(wfGlobals::getAppDir().$json->get('data/path').'/'.wfRequest::get('file'));
+        if(wfFilesystem::fileExist($root_dir.$json->get('data/path').'/'.wfRequest::get('file'))){
+          wfFilesystem::delete($root_dir.$json->get('data/path').'/'.wfRequest::get('file'));
           $json->set('success', true);
           if($data->get('data/sizeof_files')==1){
             /**
              * Delete folder if only one file left
              */
-            wfFilesystem::delete_dir(wfGlobals::getAppDir().$json->get('data/path'));
+            wfFilesystem::delete_dir($root_dir.$json->get('data/path'));
           }
         }
       }elseif(wfRequest::get('action')=='download'){
         /**
          * 
          */
-        wfUser::setSession('plugin/download/safe/file', wfGlobals::getAppDir().$data->get('data/path').'/'.wfRequest::get('file'));
+        if(strstr(wfRequest::get('file'), '../')){
+          throw new Exception(__CLASS__.' says: Param file error ('.wfRequest::get('file').')!');
+        }
+        /**
+         * 
+         */
+        wfUser::setSession('plugin/download/safe/file', $root_dir.$data->get('data/path').'/'.wfRequest::get('file'));
         /**
          * 
          */
@@ -249,10 +280,21 @@ class PluginUploadFolder{
         $download->widget_safe();
         exit;
       }elseif(wfRequest::get('action')=='view'){
-        exit('<img src="'.$data->get('data/url').'&file='.wfRequest::get('file').'&action=download" />');
+        if(true){
+          wfUser::setSession('plugin/download/safe/file', $root_dir.$data->get('data/path').'/'.wfRequest::get('file'));
+          $download = new PluginDownloadSafe();
+          $download->widget_safe();
+          exit;
+        }
+        if(false){
+          if(strstr($data->get('data/url'), '?')){
+            exit('<img src="'.$data->get('data/url').'&file='.wfRequest::get('file').'&action=download" />');
+          }else{
+            exit('<img src="'.$data->get('data/url').'?file='.wfRequest::get('file').'&action=download" />');
+          }
+        }
       }elseif(wfRequest::get('action')=='rename'){
         $json->set('success', true);
-        
         /**
          * Name
          */
@@ -269,12 +311,9 @@ class PluginUploadFolder{
             $json->set('error', 'File rename issue...');
           }
         }
-        
         if($json->get('success')){
-          $x = rename(wfGlobals::getAppDir().$data->get('data/path').'/'.wfRequest::get('file'), wfGlobals::getAppDir().$data->get('data/path').'/'.wfRequest::get('new_file'));
-          //wfHelp::yml_dump($x);
+          $x = rename($root_dir.$data->get('data/path').'/'.wfRequest::get('file'), $root_dir.$data->get('data/path').'/'.wfRequest::get('new_file'));
         }
-        
       }
     }
     exit(json_encode($json->get()));
