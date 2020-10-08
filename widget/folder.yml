@@ -1,0 +1,129 @@
+-
+  type: p
+  innerHTML:
+    -
+      type: form
+      attribute:
+        enctype: 'multipart/form-data'
+        method: post
+        style: 'display:none'
+      innerHTML:
+        input_file:
+          type: input
+          attribute:
+            type: file
+            id: puf_input_file
+            accept: _
+            onchange: PluginUploadFolder.validate()
+            stylezzz: 'display:none'
+        input_button:
+          type: input
+          attribute:
+            type: button
+            class: upload_button
+            value: Upload file
+            onclick: PluginUploadFolder.uploadFile()
+            disabled: disabled
+            stylezzz: 'display:none'
+            id: upload_button
+-
+  type: div
+  settings:
+    globals:
+      -
+        path_to_key: 'settings/plugin/i18n/translate_v1/settings/path'
+        value: '/plugin/upload/folder/i18n'
+  innerHTML:
+    -
+      type: p
+      innerHTML:
+        -
+          type: a
+          attribute:
+            onclick: "$('#puf_input_file').trigger('click'); "
+            class: btn btn-primary
+            id: puf_btn_upload
+          innerHTML: Add
+        -
+          type: progress
+          attribute:
+            id: puf_progress
+            value: 0
+            max: 100
+            style: 'width:100%;display:none;'
+    -
+      type: widget
+      data:
+        plugin: wf/table
+        method: render_many
+        data:
+          i18n: false
+          field:
+            name: Name
+            type: Type
+            size: Size
+            created_at: Created
+            action: ''
+          rs: rs:files
+          datatable:
+            _disabled: Must be set to false to render Datatable.
+            disabled: true
+            _export: If not json.
+            export:
+              _disabled: Set to true to not using export.
+              disabled: false
+              _title: Set a title to override plugin title.
+              title: My custom title.
+            searching:
+              _disabled: true
+            _order: If not json.
+            order:
+              -
+                - 0
+                - desc
+            _json: Optional (check Datatable manual).
+            json:
+              paging: true
+              iDisplayLength : 25
+              ordering: true
+              info: true
+              searching: true
+              order:
+                -
+                  - 0
+                  - desc
+              language:
+                url: /plugin/datatable/datatable_1_10_18/i18n/Swedish.json
+          class:
+            table: table-sm table-striped table-hover  
+          element:
+            after:
+              -
+                type: div
+                attribute:
+                  style: 
+                    height: 70px
+                innerHTML:
+    -
+      type: p
+      attribute:
+        style: font-size:smaller
+      innerHTML:
+        -
+          type: strong
+          innerHTML: File names allowed
+        -
+          type: span
+          innerHTML: rs:name_text
+        -
+          type: strong
+          innerHTML: Max file size
+        -
+          type: span
+          innerHTML: rs:max_size_text
+-
+  type: script
+  innerHTML: script:data
+#-
+#  type: div
+#  innerHTML: yml:/plugin/upload/folder/modal/rename.yml

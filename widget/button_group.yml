@@ -1,0 +1,57 @@
+-
+  type: div
+  attribute:
+    class: btn-group
+    role: group
+  innerHTML:
+    -
+      type: button
+      attribute:
+        id: btnGroupDrop1
+        type: button
+        class: 'btn btn-secondary btn-sm dropdown-toggle'
+        data-toggle: dropdown
+        aria-haspopup: 'true'
+        aria-expanded: 'false'
+      innerHTML: ''
+    -
+      type: div
+      attribute:
+        class: dropdown-menu
+        aria-labelledby: btnGroupDrop1
+      innerHTML:
+        -
+          type: a
+          attribute:
+            #class: dropdown-item disabled
+            class:
+              - dropdown-item
+              - rs:view_disabled
+            href: '#'
+            data-value: rs:value
+            onclick: PluginUploadFolder.view(this.getAttribute('data-value'))
+          innerHTML: View
+        -
+          type: a
+          attribute:
+            class: dropdown-item
+            href: '#'
+            data-value: rs:value
+            onclick: PluginUploadFolder.download(this.getAttribute('data-value'))
+          innerHTML: Download
+        -
+          type: a
+          attribute:
+            class: dropdown-item
+            href: '#'
+            data-value: rs:value
+            onclick: PluginUploadFolder.rename(this.getAttribute('data-value'))
+          innerHTML: Rename
+        -
+          type: a
+          attribute:
+            class: dropdown-item
+            href: '#'
+            data-value: rs:value
+            onclick: PluginUploadFolder.delete(this.getAttribute('data-value'))
+          innerHTML: Delete
