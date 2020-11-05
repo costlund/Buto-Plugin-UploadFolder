@@ -333,4 +333,46 @@ class PluginUploadFolder{
     }
     return $data;
   }
+  public static function delete_folder($file_settings = '_path_to_yml_settings_file_'){
+    /**
+     * Get data.
+     */
+    $data = new PluginWfYml(wfGlobals::getAppDir().$file_settings);
+    /**
+     * Re-arrange data.
+     */
+    $data = new PluginWfArray(array('data' => $data->get()));
+    /**
+     * Method before
+     */
+    if($data->get('data/method/before')){
+      foreach ($data->get('data/method/before') as $key => $value) {
+        $i = new PluginWfArray($value);
+        $data = PluginUploadFolder::runCaptureMethod($i->get('plugin'), $i->get('method'), $data);
+      }
+    }
+    /**
+     * Replace
+     */
+    $data->set('data/path', wfSettings::replaceDir($data->get('data/path')));
+    if($data->get('data/path')){
+      if(wfFilesystem::fileExist(wfGlobals::getAppDir().$data->get('data/path'))){
+        /**
+         * Files get.
+         */
+        $files = wfFilesystem::getScandir(wfGlobals::getAppDir().$data->get('data/path'));
+        /**
+         * Files delete.
+         */
+        foreach ($files as $key => $value) {
+          wfFilesystem::delete(wfGlobals::getAppDir().$data->get('data/path').'/'.$value);
+        }
+        /**
+         * Dir delete.
+         */
+        wfFilesystem::delete_dir(wfGlobals::getAppDir().$data->get('data/path'));
+      }
+    }
+    return null;
+  }
 }
