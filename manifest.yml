@@ -1,5 +1,9 @@
-version: 1.1.0
+version: 1.1.1
 history:
+  1.1.1:
+    date: '2020-12-16'
+    title: 'Validation'
+    description: 'Validate two dots in file name.'
   1.1.0:
     date: '2020-11-05'
     title: 'Delete folder'

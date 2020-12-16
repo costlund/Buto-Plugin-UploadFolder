@@ -202,6 +202,19 @@ class PluginUploadFolder{
        * Validation of type, name and size should be equal in php/js.
        */
       /**
+       * Validate .. in file name.
+       */
+      if($json->get('success') && $json->get('file/name')){
+        $valid = false;
+        if(!strstr($json->get('file/name'), '..')){
+          $valid = true;
+        }
+        if($valid==false){
+          $json->set('success', false);
+          $json->set('error', 'File name issue (..).');
+        }
+      }
+      /**
        * Type
        */
       if($json->get('success') && $json->get('data/type')){
