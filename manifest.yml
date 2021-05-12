@@ -1,5 +1,9 @@
-version: 1.1.1
+version: 1.1.2
 history:
+  1.1.2:
+    date: '2021-05-12'
+    title: Versions
+    description: 'Versions update.'
   1.1.1:
     date: '2020-12-16'
     title: Validation
@@ -29,13 +33,13 @@ plugin:
     version: '1.0'
   -
     name: wf/embed
-    version: 1.1.0
+    version: 1.1.1
   -
     name: download/safe
     version: 1.0.0
   -
     name: wf/table
-    version: 1.22.0
+    version: 1.23.0
 sys:
   -
     name: mercury
