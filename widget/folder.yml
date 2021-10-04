@@ -114,16 +114,17 @@
           innerHTML: File names allowed
         -
           type: span
+          settings:
+            i18n: false
           innerHTML: rs:name_text
         -
           type: strong
           innerHTML: Max file size
         -
           type: span
+          settings:
+            i18n: false
           innerHTML: rs:max_size_text
 -
   type: script
   innerHTML: script:data
-#-
-#  type: div
-#  innerHTML: yml:/plugin/upload/folder/modal/rename.yml
