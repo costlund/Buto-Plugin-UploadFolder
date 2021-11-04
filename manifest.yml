@@ -1,9 +1,9 @@
-version: 1.1.4
+version: 1.1.5
 history:
   1.1.5:
     date: '2021-10-04'
     title: I18N
-    description: 'Improvements.'
+    description: Improvements.
   1.1.4:
     date: '2021-09-27'
     title: Versions
@@ -51,7 +51,7 @@ plugin:
     version: 1.0.0
   -
     name: wf/table
-    version: 1.25.0
+    version: 1.26.0
 sys:
   -
     name: mercury
