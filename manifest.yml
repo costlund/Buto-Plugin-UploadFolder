@@ -1,5 +1,9 @@
-version: 1.1.6
+version: 1.1.7
 history:
+  1.1.7:
+    date: '2022-01-03'
+    title: Versions
+    description: 'Versions update.'
   1.1.6:
     date: '2021-12-14'
     title: Versions
@@ -55,7 +59,7 @@ plugin:
     version: 1.0.0
   -
     name: wf/table
-    version: 1.27.0
+    version: 1.28.0
 sys:
   -
     name: mercury
