@@ -1,5 +1,9 @@
-version: 1.1.11
+version: 1.1.12
 history:
+  1.1.12:
+    date: '2022-09-27'
+    title: Versions
+    description: 'Versions update.'
   1.1.11:
     date: '2022-06-09'
     title: I18n
@@ -63,7 +67,7 @@ history:
 plugin:
   -
     name: wf/yml
-    version: 1.4.0
+    version: 1.5.0
   -
     name: string/match
     version: 1.0.1
@@ -75,7 +79,7 @@ plugin:
     version: 1.0.0
   -
     name: wf/table
-    version: 1.31.0
+    version: 1.31.3
 sys:
   -
     name: mercury
