@@ -1,5 +1,9 @@
-version: 1.1.12
+version: 1.1.13
 history:
+  1.1.13:
+    date: '2022-12-03'
+    title: Links
+    description: 'Add #! to link href attribute to stay in same scroll position. Minor js improvements.'
   1.1.12:
     date: '2022-09-27'
     title: Versions

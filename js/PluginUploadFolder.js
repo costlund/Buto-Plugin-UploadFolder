@@ -76,7 +76,7 @@ function PluginUploadFolder(){
       var json = JSON.parse(e.target.responseText.trim());
       if(json.success == true){
         if(PluginUploadFolder.data.success){
-          eval(PluginUploadFolder.data.success)
+          eval(PluginUploadFolder.data.success);
         }else{
           alert('File was uploaded (set your custom success param to replace this alert)!');
         }
@@ -84,17 +84,18 @@ function PluginUploadFolder(){
         alert(json.error);
       }
     }else{
-      alert('An error occured, status '+e.target.status+'.')          
+      alert('An error occured, status '+e.target.status+'.');
     }
   }
   this.delete = function(file){
     if(!confirm('Are you sure?')){
-      return null;
+      return false;
     }
     $.get( PluginUploadFolder.data.url, { file: file, action: 'delete' } )
       .done(function( data ) {
         if(PluginUploadFolder.data.success){
-          eval(PluginUploadFolder.data.success)
+          eval(PluginUploadFolder.data.success);
+          return false;
         }else{
           alert('File was deleted (set your custom success param to replace this alert)!');
         }

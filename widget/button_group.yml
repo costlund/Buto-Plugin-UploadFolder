@@ -23,11 +23,10 @@
         -
           type: a
           attribute:
-            #class: dropdown-item disabled
             class:
               - dropdown-item
               - rs:view_disabled
-            href: '#'
+            href: '#!'
             data-value: rs:value
             onclick: PluginUploadFolder.view(this.getAttribute('data-value'))
           innerHTML: View
@@ -35,7 +34,7 @@
           type: a
           attribute:
             class: dropdown-item
-            href: '#'
+            href: '#!'
             data-value: rs:value
             onclick: PluginUploadFolder.download(this.getAttribute('data-value'))
           innerHTML: Download
@@ -43,7 +42,7 @@
           type: a
           attribute:
             class: dropdown-item
-            href: '#'
+            href: '#!'
             data-value: rs:value
             onclick: PluginUploadFolder.rename(this.getAttribute('data-value'))
           innerHTML: Rename
@@ -51,7 +50,7 @@
           type: a
           attribute:
             class: dropdown-item
-            href: '#'
+            href: '#!'
             data-value: rs:value
             onclick: PluginUploadFolder.delete(this.getAttribute('data-value'))
           innerHTML: Delete
