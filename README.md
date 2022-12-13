@@ -102,4 +102,13 @@ content:
       data: yml:/theme/_/config/upload_folder_data.yml
 ```
 
+### List
+List files in a table. Set param list/onclick to control onclick on a file. Param data will be passed into this function.
+```
+list:
+  onclick: PluginMyPlugin.handle_on_file_click
+```
+
+
+
 

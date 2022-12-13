@@ -27,7 +27,7 @@ class PluginUploadFolder{
     }
     return $root_dir;
   }
-  private function set_data($data){
+  private function set_data($data, $widget='folder'){
     $data = new PluginWfArray($data);
     /**
      * Role
@@ -82,15 +82,22 @@ class PluginUploadFolder{
         continue;
       }
       /**
+       * name
+       */
+      if($widget=='folder'){
+        if(($type=='image/jpeg' || $type=='image/png' || $type=='application/pdf') && $data->get('data/public')){
+          $name = '<a href="'.$data->get('data/path').'/'.$value.'" target="_blank">'.$value.'</a>';
+        }elseif($type=='image/jpeg' || $type=='image/png' || $type=='application/pdf'){
+          $name = '<a href=# onclick="PluginUploadFolder.view(\''.$value.'\')">'.$value.'</a>';
+        }else{
+          $name = '<a href=# onclick="PluginUploadFolder.download(\''.$value.'\')">'.$value.'</a>';
+        }
+      }elseif($widget=='list'){
+        $name = $value;
+      }
+      /**
        * 
        */
-      if(($type=='image/jpeg' || $type=='image/png' || $type=='application/pdf') && $data->get('data/public')){
-        $name = '<a href="'.$data->get('data/path').'/'.$value.'" target="_blank">'.$value.'</a>';
-      }elseif($type=='image/jpeg' || $type=='image/png' || $type=='application/pdf'){
-        $name = '<a href=# onclick="PluginUploadFolder.view(\''.$value.'\')">'.$value.'</a>';
-      }else{
-        $name = '<a href=# onclick="PluginUploadFolder.download(\''.$value.'\')">'.$value.'</a>';
-      }
       if(($type=='image/jpeg' || $type=='image/png')){
         $button_group->setByTag(array('view_disabled' => ''));
       }else{
@@ -166,6 +173,23 @@ class PluginUploadFolder{
     $widget = new PluginWfYml(__DIR__.'/widget/folder.yml');
     $widget->setByTag($data->get('data'));
     $widget->setByTag(array('data' => $script), 'script');
+    wfDocument::renderElement($widget->get());
+  }
+  public function widget_list($data){
+    $data = $this->set_data($data, 'list');
+    /**
+     * script
+     */
+    $script = "$('#wfd_account_org_message_files tbody').on( 'click', 'tr', function () { console.log('PluginUploadFolder says: Param data/list/onclick is missing.'); console.log( datatable_wfd_account_org_message_files.row( this ).data()) ;});";
+    if($data->get('data/list/onclick')){
+      $script = "$('#wfd_account_org_message_files tbody').on( 'click', 'tr', function () {  ".$data->get('data/list/onclick')."( datatable_wfd_account_org_message_files.row( this ).data()) ;});";
+    }
+    /**
+     * 
+     */
+    $widget = new PluginWfYml(__DIR__.'/widget/list.yml');
+    $widget->setByTag($data->get('data'));
+    $widget->setByTag(array('innerHTML' => $script), 'script');
     wfDocument::renderElement($widget->get());
   }
   public function widget_capture($data){

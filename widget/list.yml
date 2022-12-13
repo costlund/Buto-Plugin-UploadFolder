@@ -1,0 +1,49 @@
+-
+  type: div
+  settings:
+    globals:
+      -
+        path_to_key: 'settings/plugin/i18n/translate_v1/settings/path'
+        value: '/plugin/upload/folder/i18n'
+  innerHTML:
+    -
+      type: widget
+      data:
+        plugin: wf/table
+        method: render_many
+        data:
+          id: wfd_account_org_message_files
+          i18n: false
+          field:
+            name: Name
+            type: Type
+            size: Size
+            created_at: Created
+            #action: ''
+          rs: rs:files
+          datatable:
+            disabled: false
+            export:
+              disabled: true
+            searching:
+              _disabled: true
+            _order: If not json.
+            order:
+              -
+                - 0
+                - desc
+            jsonzzz:
+              paging: true
+              iDisplayLength : 25
+              ordering: true
+              info: true
+              searching: true
+              order:
+                -
+                  - 0
+                  - desc
+          class:
+            table: table-sm table-striped table-hover  
+-
+  type: script
+  innerHTML: script:innerHTML
