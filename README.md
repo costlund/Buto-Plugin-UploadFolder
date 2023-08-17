@@ -55,7 +55,7 @@ Example method to set request param id as a folder inside.
 ```
 public function method_before($data){
   if(wfRequest::get('id')){
-    if(strstr(wfRequest::get('id'), '.') || strstr(wfRequest::get('id'), '/')){
+    if(wfPhpfunc::strstr(wfRequest::get('id'), '.') || wfPhpfunc::strstr(wfRequest::get('id'), '/')){
       exit('Some hack prevention...');
     }
     $data->set('data/path', $data->get('data/path').'/'.wfRequest::get('id'));

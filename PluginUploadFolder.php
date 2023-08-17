@@ -9,11 +9,11 @@ class PluginUploadFolder{
     /**
      * Secure request param file.
      */
-    if(strstr(wfRequest::get('file'), '..') || strstr(wfRequest::get('file'), '/')){
+    if(wfPhpfunc::strstr(wfRequest::get('file'), '..') || wfPhpfunc::strstr(wfRequest::get('file'), '/')){
       throw new Exception(__CLASS__.' says: Error in request param file '.wfRequest::get('file').'!');
       exit;
     }
-    if(strstr(wfRequest::get('new_file'), '..') || strstr(wfRequest::get('new_file'), '/')){
+    if(wfPhpfunc::strstr(wfRequest::get('new_file'), '..') || wfPhpfunc::strstr(wfRequest::get('new_file'), '/')){
       throw new Exception(__CLASS__.' says: Error in request param new_file '.wfRequest::get('new_file').'!');
       exit;
     }
@@ -121,7 +121,7 @@ class PluginUploadFolder{
       foreach ($data->get('data/type') as $key => $value) {
         $text .= ', '.$value;
       }
-      $text = substr($text, 2);
+      $text = wfPhpfunc::substr($text, 2);
       $data->set('data/type_text', $text);
     }
     /**
@@ -132,7 +132,7 @@ class PluginUploadFolder{
       foreach ($data->get('data/name') as $key => $value) {
         $text .= ', '.$value;
       }
-      $text = substr($text, 2);
+      $text = wfPhpfunc::substr($text, 2);
       $data->set('data/name_text', $text);
     }
     /**
@@ -230,7 +230,7 @@ class PluginUploadFolder{
        */
       if($json->get('success') && $json->get('file/name')){
         $valid = false;
-        if(!strstr($json->get('file/name'), '..')){
+        if(!wfPhpfunc::strstr($json->get('file/name'), '..')){
           $valid = true;
         }
         if($valid==false){
@@ -303,7 +303,7 @@ class PluginUploadFolder{
         /**
          * 
          */
-        if(strstr(wfRequest::get('file'), '../')){
+        if(wfPhpfunc::strstr(wfRequest::get('file'), '../')){
           throw new Exception(__CLASS__.' says: Param file error ('.wfRequest::get('file').')!');
         }
         /**
@@ -324,7 +324,7 @@ class PluginUploadFolder{
           exit;
         }
         if(false){
-          if(strstr($data->get('data/url'), '?')){
+          if(wfPhpfunc::strstr($data->get('data/url'), '?')){
             exit('<img src="'.$data->get('data/url').'&file='.wfRequest::get('file').'&action=download" />');
           }else{
             exit('<img src="'.$data->get('data/url').'?file='.wfRequest::get('file').'&action=download" />');
@@ -361,7 +361,7 @@ class PluginUploadFolder{
        * One should create it's own method like this one if in need of change data on the fly.
        */
       if(wfRequest::get('id')){
-        if(strstr(wfRequest::get('id'), '.') || strstr(wfRequest::get('id'), '/')){
+        if(wfPhpfunc::strstr(wfRequest::get('id'), '.') || wfPhpfunc::strstr(wfRequest::get('id'), '/')){
           exit('Some hack prevention...');
         }
         $data->set('data/path', $data->get('data/path').'/'.wfRequest::get('id'));
