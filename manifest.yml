@@ -1,5 +1,9 @@
-version: 1.4.2
+version: 1.4.3
 history:
+  1.4.3:
+    date: '2023-12-18'
+    title: File name
+    description: 'Handle file names with not accepted characters.'
   1.4.2:
     date: '2023-09-11'
     title: Versions

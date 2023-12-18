@@ -165,7 +165,7 @@ class PluginUploadFolder{
      */
     if(wfUser::getSession()->get('plugin/upload/folder/file') && !wfUser::getSession()->get('plugin/upload/folder/file/rename')){
       wfUser::setSession('plugin/upload/folder/file/rename', true);
-      $script .= "PluginUploadFolder.rename('".wfUser::getSession()->get('plugin/upload/folder/file/name')."');";
+      $script .= "$( document ).ready(function() {  PluginUploadFolder.rename('".wfUser::getSession()->get('plugin/upload/folder/file/name')."'); });";
     }
     /**
      * 
@@ -191,6 +191,9 @@ class PluginUploadFolder{
     $widget->setByTag($data->get('data'));
     $widget->setByTag(array('innerHTML' => $script), 'script');
     wfDocument::renderElement($widget->get());
+  }
+  private function handle_file_name($str){
+    return preg_replace( '/[^a-zA-Z0-9._]+/', '', ( $str ) );
   }
   public function widget_capture($data){
     $data = $this->set_data($data);
@@ -222,6 +225,7 @@ class PluginUploadFolder{
     if(wfRequest::isPost()){
       $json->set('file', $_FILES["file1"]);
       $json->set('success', true);
+      $json->set('file/name', $this->handle_file_name($json->get('file/name')));
       /**
        * Validation of type, name and size should be equal in php/js.
        */
@@ -337,6 +341,7 @@ class PluginUploadFolder{
          */
         if($json->get('success') && $json->get('data/name')){
           $match = new PluginStringMatch();
+          wfRequest::set('new_file', $this->handle_file_name(wfRequest::get('new_file')));
           $valid = false;
           foreach ($json->get('data/name') as $key => $value) {
             if($match->wildcard($value, strtolower(wfRequest::get('new_file'))) > 0){

@@ -109,6 +109,15 @@ list:
   onclick: PluginMyPlugin.handle_on_file_click
 ```
 
-
+## Methods
+### handle_file_name
+Only this characters are accepted in file names. Others will be removed.
+````
+a-z
+A-Z
+0-9
+.
+_
+````
 
 
